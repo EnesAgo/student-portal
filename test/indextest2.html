@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUDT Study Semester Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3e50 0%, #1a252f 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .calendar-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .calendar-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .semester-option {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .semester-option:hover {
+            background: #f8f9fa;
+        }
+
+        .semester-option input[type="radio"] {
+            margin-right: 0.75rem;
+            cursor: pointer;
+        }
+
+        .semester-option label {
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .semester-option input[type="radio"]:checked + label {
+            font-weight: 600;
+            color: #4a90e2;
+        }
+
+        .month-selector {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .month-selector:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .holiday-item {
+            padding: 0.75rem;
+            background: #fff8e1;
+            border-left: 3px solid #ffc107;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .holiday-date {
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 0.25rem;
+        }
+
+        .holiday-name {
+            color: #666;
+        }
+
+        .calendar-main {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .calendar-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #2d3e50;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #4a90e2;
+            color: white;
+            border-color: #4a90e2;
+        }
+
+        .week-section {
+            margin-bottom: 3rem;
+        }
+
+        .week-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .week-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .time-header {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        .day-header {
+            background: #2d3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .day-header.holiday {
+            background: #ffa726;
+        }
+
+        .day-date {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .time-slot {
+            background: #f8f9fa;
+            padding: 0.75rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .class-cell {
+            background: white;
+            padding: 0.75rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .class-cell.holiday {
+            background: #fff8e1;
+        }
+
+        .class-block {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .class-block.math {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+        }
+
+        .class-block.german {
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+        }
+
+        .class-block.personal {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .class-block.other {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        }
+
+        .lunch-block {
+            background: #f0f0f0;
+            color: #999;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="header-title">MUDT - Study Semester Calendar</h1>
+    </div>
+
+    <div class="calendar-layout">
+        <!-- Sidebar -->
+        <div class="calendar-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Select Semester</div>
+                <div class="semester-option">
+                    <input type="radio" name="semester" id="sem1" value="1" checked>
+                    <label for="sem1">Semester 1</label>
+                </div>
+                <div class="semester-option">
+                    <input type="radio" name="semester" id="sem2" value="2">
+                    <label for="sem2">Semester 2</label>
+                </div>
+                <div class="semester-option">
+                    <input type="radio" name="semester" id="sem3" value="3">
+                    <label for="sem3">Semester 3</label>
+                </div>
+                <div class="semester-option">
+                    <input type="radio" name="semester" id="sem4" value="4">
+                    <label for="sem4">Semester 4</label>
+                </div>
+                <div class="semester-option">
+                    <input type="radio" name="semester" id="sem5" value="5">
+                    <label for="sem5">Semester 5</label>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Month</div>
+                <select class="month-selector">
+                    <option value="10-2025">October 2025</option>
+                    <option value="11-2025">November 2025</option>
+                    <option value="12-2025">December 2025</option>
+                    <option value="01-2026">January 2026</option>
+                    <option value="02-2026">February 2026</option>
+                </select>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">🎄 Bavaria Holidays</div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Oct 3, 2025</div>
+                    <div class="holiday-name">Day of German Unity</div>
+                </div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Oct 31, 2025</div>
+                    <div class="holiday-name">Reformation Day</div>
+                </div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Nov 1, 2025</div>
+                    <div class="holiday-name">All Saints' Day</div>
+                </div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Dec 24-26, 2025</div>
+                    <div class="holiday-name">Christmas</div>
+                </div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Jan 1, 2026</div>
+                    <div class="holiday-name">New Year's Day</div>
+                </div>
+                <div class="holiday-item">
+                    <div class="holiday-date">Jan 6, 2026</div>
+                    <div class="holiday-name">Epiphany</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Main -->
+        <div class="calendar-main">
+            <div class="calendar-header">
+                <h2 class="calendar-title">October 13-26, 2025 - Semester 1</h2>
+                <div class="calendar-nav">
+                    <button class="nav-button">◀ Previous 2 Weeks</button>
+                    <button class="nav-button">Next 2 Weeks ▶</button>
+                </div>
+            </div>
+
+            <!-- Week 1: Oct 13-17 -->
+            <div class="week-section">
+                <div class="week-header">Week 1: October 13-17, 2025</div>
+                <div class="schedule-grid">
+                    <!-- Headers -->
+                    <div class="time-header">Time</div>
+                    <div class="day-header">
+                        Monday
+                        <div class="day-date">Oct 13</div>
+                    </div>
+                    <div class="day-header">
+                        Tuesday
+                        <div class="day-date">Oct 14</div>
+                    </div>
+                    <div class="day-header">
+                        Wednesday
+                        <div class="day-date">Oct 15</div>
+                    </div>
+                    <div class="day-header">
+                        Thursday
+                        <div class="day-date">Oct 16</div>
+                    </div>
+                    <div class="day-header">
+                        Friday
+                        <div class="day-date">Oct 17</div>
+                    </div>
+
+                    <!-- 8:30-10:00 -->
+                    <div class="time-slot">8:30-10:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python<br>or German</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell">
+                        <div class="class-block german">German<br>"Früher Vogel"</div>
+                    </div>
+                    <div class="class-cell"></div>
+
+                    <!-- 10:15-11:45 -->
+                    <div class="time-slot">10:15-11:45</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block german">German<br>"zweite Maus"</div>
+                    </div>
+                    <div class="class-cell"></div>
+
+                    <!-- 11:45-13:15 -->
+                    <div class="time-slot">11:45-13:15</div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+
+                    <!-- 13:15-14:00 -->
+                    <div class="time-slot">13:15-14:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block other">Fire alarm &<br>evacuation test</div>
+                    </div>
+                    <div class="class-cell"></div>
+
+                    <!-- 14:15-15:00 -->
+                    <div class="time-slot">14:15-15:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block personal">Personal Dev.</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+
+                    <!-- 15:15-16:00 -->
+                    <div class="time-slot">15:15-16:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+                </div>
+            </div>
+
+            <!-- Week 2: Oct 20-24 -->
+            <div class="week-section">
+                <div class="week-header">Week 2: October 20-24, 2025</div>
+                <div class="schedule-grid">
+                    <!-- Headers -->
+                    <div class="time-header">Time</div>
+                    <div class="day-header">
+                        Monday
+                        <div class="day-date">Oct 20</div>
+                    </div>
+                    <div class="day-header">
+                        Tuesday
+                        <div class="day-date">Oct 21</div>
+                    </div>
+                    <div class="day-header">
+                        Wednesday
+                        <div class="day-date">Oct 22</div>
+                    </div>
+                    <div class="day-header">
+                        Thursday
+                        <div class="day-date">Oct 23</div>
+                    </div>
+                    <div class="day-header">
+                        Friday
+                        <div class="day-date">Oct 24</div>
+                    </div>
+
+                    <!-- 8:30-10:00 -->
+                    <div class="time-slot">8:30-10:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python<br>or German</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python<br>group work</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block german">German<br>"Früher Vogel"</div>
+                    </div>
+                    <div class="class-cell"></div>
+
+                    <!-- 10:15-11:45 -->
+                    <div class="time-slot">10:15-11:45</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="class-block german">German<br>"zweite Maus"</div>
+                    </div>
+                    <div class="class-cell"></div>
+
+                    <!-- 11:45-13:15 -->
+                    <div class="time-slot">11:45-13:15</div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+                    <div class="class-cell">
+                        <div class="lunch-block">Lunch break</div>
+                    </div>
+
+                    <!-- 13:15-14:00 -->
+                    <div class="time-slot">13:15-14:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+
+                    <!-- 14:15-15:00 -->
+                    <div class="time-slot">14:15-15:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+
+                    <!-- 15:15-16:00 -->
+                    <div class="time-slot">15:15-16:00</div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell">
+                        <div class="class-block math">Math/Python</div>
+                    </div>
+                    <div class="class-cell"></div>
+                    <div class="class-cell"></div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);"></div>
+                    <span>Math/Python</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);"></div>
+                    <span>German</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <span>Personal Development</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);"></div>
+                    <span>Other Events</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

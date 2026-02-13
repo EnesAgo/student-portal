@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "Student Portal API",
+    "description": "Complete API collection for Student Mentoring Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"studentId\": \"S12345\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/users", "host": ["localhost"], "port": "3001", "path": ["users"]}
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/users", "host": ["localhost"], "port": "3001", "path": ["users"]}
+          }
+        },
+        {
+          "name": "Get Mentors",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/users/mentors", "host": ["localhost"], "port": "3001", "path": ["users", "mentors"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mentors",
+      "item": [
+        {
+          "name": "Create Mentor Profile",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"USER_ID_HERE\",\n  \"bio\": \"3rd year CS student ready to help!\",\n  \"languages\": [\"English\", \"Spanish\"],\n  \"country\": \"United States\",\n  \"majors\": [\"Computer Science\"],\n  \"interests\": [\"Academic Support\", \"Career Guidance\"],\n  \"yearOfStudy\": \"3rd Year\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/mentors", "host": ["localhost"], "port": "3001", "path": ["mentors"]}
+          }
+        },
+        {
+          "name": "Get All Mentors",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/mentors", "host": ["localhost"], "port": "3001", "path": ["mentors"]}
+          }
+        },
+        {
+          "name": "Filter Mentors",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3001/mentors?languages=English&country=United States&isAvailable=true",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["mentors"],
+              "query": [
+                {"key": "languages", "value": "English"},
+                {"key": "country", "value": "United States"},
+                {"key": "isAvailable", "value": "true"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mentorship Requests",
+      "item": [
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"STUDENT_ID\",\n  \"mentorId\": \"MENTOR_ID\",\n  \"message\": \"Hi! I would love to connect with you for academic guidance.\",\n  \"proposedMeetingTime\": \"2026-02-20T14:00:00Z\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/mentorship-requests", "host": ["localhost"], "port": "3001", "path": ["mentorship-requests"]}
+          }
+        },
+        {
+          "name": "Get All Requests",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/mentorship-requests", "host": ["localhost"], "port": "3001", "path": ["mentorship-requests"]}
+          }
+        },
+        {
+          "name": "Accept Request",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\",\n  \"responseMessage\": \"Looking forward to meeting you!\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/mentorship-requests/REQUEST_ID", "host": ["localhost"], "port": "3001", "path": ["mentorship-requests", "REQUEST_ID"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mentoring Sessions",
+      "item": [
+        {
+          "name": "Schedule Session",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"STUDENT_ID\",\n  \"mentorId\": \"MENTOR_ID\",\n  \"scheduledAt\": \"2026-02-20T14:00:00Z\",\n  \"duration\": 60,\n  \"topic\": \"Career Planning\",\n  \"location\": \"Online - Zoom\",\n  \"meetingLink\": \"https://zoom.us/j/123456\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/mentoring-sessions", "host": ["localhost"], "port": "3001", "path": ["mentoring-sessions"]}
+          }
+        },
+        {
+          "name": "Get Upcoming Sessions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3001/mentoring-sessions/upcoming?userId=USER_ID&isMentor=false",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["mentoring-sessions", "upcoming"],
+              "query": [
+                {"key": "userId", "value": "USER_ID"},
+                {"key": "isMentor", "value": "false"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Complete Session",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Great session! Discussed career paths in tech.\"\n}"
+            },
+            "url": {"raw": "http://localhost:3001/mentoring-sessions/SESSION_ID", "host": ["localhost"], "port": "3001", "path": ["mentoring-sessions", "SESSION_ID"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reference Data",
+      "item": [
+        {
+          "name": "Seed Languages",
+          "request": {
+            "method": "POST",
+            "url": {"raw": "http://localhost:3001/languages/seed", "host": ["localhost"], "port": "3001", "path": ["languages", "seed"]}
+          }
+        },
+        {
+          "name": "Get Languages",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/languages", "host": ["localhost"], "port": "3001", "path": ["languages"]}
+          }
+        },
+        {
+          "name": "Seed Countries",
+          "request": {
+            "method": "POST",
+            "url": {"raw": "http://localhost:3001/countries/seed", "host": ["localhost"], "port": "3001", "path": ["countries", "seed"]}
+          }
+        },
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/countries", "host": ["localhost"], "port": "3001", "path": ["countries"]}
+          }
+        },
+        {
+          "name": "Seed Majors",
+          "request": {
+            "method": "POST",
+            "url": {"raw": "http://localhost:3001/majors/seed", "host": ["localhost"], "port": "3001", "path": ["majors", "seed"]}
+          }
+        },
+        {
+          "name": "Get Majors",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3001/majors", "host": ["localhost"], "port": "3001", "path": ["majors"]}
+          }
+        }
+      ]
+    }
+  ]
+}
+
