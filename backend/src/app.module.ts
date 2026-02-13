@@ -8,6 +8,8 @@ import { LanguagesModule } from './languages/languages.module';
 import { CountriesModule } from './countries/countries.module';
 import { MajorsModule } from './majors/majors.module';
 import { MentoringSessionsModule } from './mentoring-sessions/mentoring-sessions.module';
+import configuration from './config/configuration';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { MentoringSessionsModule } from './mentoring-sessions/mentoring-sessions
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      load: [configuration],
+      validationSchema: validationSchema,
     }),
 
     // MongoDB Connection
