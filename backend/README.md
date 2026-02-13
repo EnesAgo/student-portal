@@ -39,18 +39,11 @@ A NestJS REST API backend for the Student Mentoring Portal with MongoDB integrat
    - proposedMeetingTime
    - responseMessage, respondedAt
 
-4. **MentoringSessions** - Scheduled sessions
-   - studentId, mentorId
-   - scheduledAt, duration
-   - status (scheduled/completed/cancelled)
-   - topic, notes, location, meetingLink
-   - completedAt
-
 ### Reference Data Collections
 
-5. **Languages** - Available languages (English, Spanish, French, etc.)
-6. **Countries** - Countries list (US, UK, Germany, etc.)
-7. **Majors** - Academic majors (Computer Science, Business, etc.)
+4. **Languages** - Available languages (English, Spanish, French, etc.)
+5. **Countries** - Countries list (US, UK, Germany, etc.)
+6. **Majors** - Academic majors (Computer Science, Business, etc.)
 
 ## Installation
 
@@ -131,21 +124,11 @@ curl -X POST http://localhost:3001/majors/seed
 - `GET /mentorship-requests` - Get all requests
 - `GET /mentorship-requests/student/:studentId` - Get requests by student
 - `GET /mentorship-requests/mentor/:mentorId` - Get requests by mentor
-- `GET /mentorship-requests/mentor/:mentorId/pending` - Get pending requests
+  - Query params: `studentId`, `mentorId`
 - `GET /mentorship-requests/:id` - Get request by ID
 - `PATCH /mentorship-requests/:id` - Update request (accept/reject)
 - `DELETE /mentorship-requests/:id` - Delete request
 
-### Mentoring Sessions
-- `POST /mentoring-sessions` - Schedule a session
-- `GET /mentoring-sessions` - Get all sessions
-- `GET /mentoring-sessions/upcoming` - Get upcoming sessions
-  - Query params: `userId`, `isMentor`
-- `GET /mentoring-sessions/student/:studentId` - Get sessions by student
-- `GET /mentoring-sessions/mentor/:mentorId` - Get sessions by mentor
-- `GET /mentoring-sessions/:id` - Get session by ID
-- `PATCH /mentoring-sessions/:id` - Update session
-- `DELETE /mentoring-sessions/:id` - Delete session
 
 ### Reference Data
 - `GET /languages` - Get all languages
@@ -222,7 +205,6 @@ backend/
 │   │   └── users.module.ts
 │   ├── mentors/            # Mentor module
 │   ├── mentorship-requests/
-│   ├── mentoring-sessions/
 │   ├── languages/          # Reference data
 │   ├── countries/
 │   ├── majors/

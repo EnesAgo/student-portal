@@ -24,23 +24,18 @@ A **complete, production-ready NestJS REST API** with MongoDB for a Student Ment
 - Fields: studentId, mentorId, message, status, proposedMeetingTime, responseMessage, respondedAt
 - Status: pending/accepted/rejected/cancelled
 
-### 4. Mentoring Sessions
-- Track scheduled and completed sessions
-- Fields: studentId, mentorId, scheduledAt, duration, status, topic, notes, location, meetingLink, completedAt
-- Query upcoming sessions
+### 4. Languages (Reference Data)
+- Seeded with 10 languages (German, English, Turkish, Romanian, Russian, Italian, Macedonian, Albanian, Latvian, Luganda)
 
-### 5. Languages (Reference Data)
-- Seeded with 12 languages (English, Spanish, French, German, Italian, Portuguese, Chinese, Japanese, Korean, Arabic, Turkish, Russian)
+### 5. Countries (Reference Data)
+- Seeded with 8 countries (Germany, Turkey, Uganda, Italy, Romania, Latvia, Albania, North Macedonia)
 
-### 6. Countries (Reference Data)
-- Seeded with 33+ countries
-
-### 7. Majors (Reference Data)
-- Seeded with 28+ academic majors organized by department
+### 6. Majors (Reference Data)
+- Seeded with 4 academic majors (Software Engineering, Cyber Security, Data Science And AI, Digital Industrial Engineering)
 
 ---
 
-## API Endpoints (39 Total)
+## API Endpoints (31 Total)
 
 ### Users (7 endpoints)
 ```
@@ -75,17 +70,6 @@ PATCH  /mentorship-requests/:id                  # Update (accept/reject)
 DELETE /mentorship-requests/:id                  # Delete request
 ```
 
-### Mentoring Sessions (8 endpoints)
-```
-POST   /mentoring-sessions                   # Schedule session
-GET    /mentoring-sessions                   # Get all sessions
-GET    /mentoring-sessions/upcoming          # Get upcoming (filtered)
-GET    /mentoring-sessions/student/:id       # By student
-GET    /mentoring-sessions/mentor/:id        # By mentor
-GET    /mentoring-sessions/:id               # Get by ID
-PATCH  /mentoring-sessions/:id               # Update session
-DELETE /mentoring-sessions/:id               # Delete session
-```
 
 ### Reference Data (9 endpoints)
 ```
@@ -132,13 +116,6 @@ src/
 │   ├── dto/create-mentorship-request.dto.ts
 │   ├── dto/update-mentorship-request.dto.ts
 │   └── schemas/mentorship-request.schema.ts
-├── mentoring-sessions/ (4 files)
-│   ├── mentoring-sessions.module.ts
-│   ├── mentoring-sessions.controller.ts
-│   ├── mentoring-sessions.service.ts
-│   ├── dto/create-mentoring-session.dto.ts
-│   ├── dto/update-mentoring-session.dto.ts
-│   └── schemas/mentoring-session.schema.ts
 ├── languages/ (3 files)
 │   ├── languages.module.ts
 │   ├── languages.controller.ts

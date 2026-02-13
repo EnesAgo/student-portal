@@ -31,24 +31,16 @@ A complete **NestJS REST API** backend with **MongoDB** integration for a Studen
 - Response messages
 - Filter by student, mentor, or status
 
-###4. Mentoring Sessions Collection
-- Schedule and track actual mentoring sessions
-- Session status (scheduled/completed/cancelled)
-- Duration, topic, location
-- Meeting links for online sessions
-- Notes for completed sessions
-- Upcoming sessions query
-
-###5. Languages Collection (Reference Data)
-- Seeded with 12 common languages
+###4. Languages Collection (Reference Data)
+- Seeded with 10 languages matching frontend
 - Used for mentor language filters
 
-###6. Countries Collection (Reference Data)
-- Seeded with 33+ countries
+###5. Countries Collection (Reference Data)
+- Seeded with 8 countries matching frontend
 - Used for mentor location
 
-###7. Majors Collection (Reference Data)
-- Seeded with 28+ academic majors
+###6. Majors Collection (Reference Data)
+- Seeded with 4 academic majors matching frontend
 - Organized by department
 - Used for finding mentors in same field
 
@@ -88,16 +80,6 @@ backend/
 │   │   ├── mentorship-requests.controller.ts
 │   │   ├── mentorship-requests.service.ts
 │   │   └── mentorship-requests.module.ts
-│   │
-│   ├── mentoring-sessions/
-│   │   ├── dto/
-│   │   │   ├── create-mentoring-session.dto.ts
-│   │   │   └── update-mentoring-session.dto.ts
-│   │   ├── schemas/
-│   │   │   └── mentoring-session.schema.ts
-│   │   ├── mentoring-sessions.controller.ts
-│   │   ├── mentoring-sessions.service.ts
-│   │   └── mentoring-sessions.module.ts
 │   │
 │   ├── languages/
 │   │   ├── schemas/
@@ -292,8 +274,7 @@ Clean code structure
 3. **Search Mentors**: Students filter mentors via `GET /mentors?filters`
 4. **Send Request**: Student sends request via `POST /mentorship-requests`
 5. **Accept Request**: Mentor accepts via `PATCH /mentorship-requests/:id`
-6. **Schedule Session**: Either party schedules via `POST /mentoring-sessions`
-7. **Complete Session**: Mark session complete, add notes, rate mentor
+6. **Connect**: Students and mentors connect based on accepted requests
 
 ---
 
@@ -348,12 +329,9 @@ Clean code structure
 User (1) ←→ (0..1) Mentor
   ↓
   ├─→ (many) MentorshipRequests (as student)
-  ├─→ (many) MentorshipRequests (as mentor via Mentor)
-  ├─→ (many) MentoringSessions (as student)
-  └─→ (many) MentoringSessions (as mentor via Mentor)
+  └─→ (many) MentorshipRequests (as mentor via Mentor)
 
 Mentor (1) ←→ (many) MentorshipRequests
-Mentor (1) ←→ (many) MentoringSessions
 
 Languages, Countries, Majors are reference collections
 ```
@@ -378,8 +356,8 @@ Languages, Countries, Majors are reference collections
 ## Summary
 
 You now have a **fully functional NestJS backend API** with:
--7 MongoDB collections
--39 REST API endpoints
+- 6 MongoDB collections
+- 31 REST API endpoints
 -Complete CRUD operations
 -Advanced filtering and search
 -Seeded reference data

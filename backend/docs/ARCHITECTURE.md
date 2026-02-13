@@ -18,7 +18,6 @@
 │  │                                                                │  │
 │  │  /users          /mentors        /mentorship-requests         │  │
 │  │  /languages      /countries      /majors                      │  │
-│  │  /mentoring-sessions                                          │  │
 │  └─────────────────────────┬─────────────────────────────────────┘  │
 │                            │                                         │
 │                            ▼                                         │
@@ -28,7 +27,6 @@
 │  │  UsersService         MentorsService                          │  │
 │  │  LanguagesService     CountriesService                        │  │
 │  │  MajorsService        MentorshipRequestsService              │  │
-│  │  MentoringSessionsService                                     │  │
 │  └─────────────────────────┬─────────────────────────────────────┘  │
 │                            │                                         │
 │                            ▼                                         │
@@ -38,7 +36,6 @@
 │  │  User Schema          Mentor Schema                           │  │
 │  │  Language Schema      Country Schema                          │  │
 │  │  Major Schema         MentorshipRequest Schema                │  │
-│  │  MentoringSession Schema                                      │  │
 │  └─────────────────────────┬─────────────────────────────────────┘  │
 └────────────────────────────┼─────────────────────────────────────────┘
                              │
@@ -53,12 +50,8 @@
 │  └──────────────┘  └──────────────┘  └──────────────────────────┘  │
 │                                                                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │ mentoringsessions │ languages │  │       countries          │  │
+│  │  languages   │  │   countries  │  │        majors            │  │
 │  └──────────────┘  └──────────────┘  └──────────────────────────┘  │
-│                                                                      │
-│  ┌──────────────┐                                                   │
-│  │    majors    │                                                   │
-│  └──────────────┘                                                   │
 └─────────────────────────────────────────────────────────────────────┘
 
 
@@ -149,12 +142,10 @@ Mentor                 │
   │                    │
   │ (many)             │
   │                    │
-  ├──→ MentorshipRequests ──→ (ref) ─────┘
-  │         │
-  │         │ (ref to Student)
-  │         └──→ User (as student)
-  │
-  └──→ MentoringSessions ──→ (ref to Student) ──→ User
+  └──→ MentorshipRequests ──→ (ref) ─────┘
+           │
+           │ (ref to Student)
+           └──→ User (as student)
 
 
 Languages ─┐
@@ -200,11 +191,6 @@ AppModule (Root)
 │    ├─── MentorshipRequestsController
 │    ├─── MentorshipRequestsService
 │    └─── MentorshipRequest Schema
-│
-├─── MentoringSessionsModule
-│    ├─── MentoringSessionsController
-│    ├─── MentoringSessionsService
-│    └─── MentoringSession Schema
 │
 ├─── LanguagesModule
 │    ├─── LanguagesController

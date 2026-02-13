@@ -7,7 +7,6 @@ import { MentorshipRequestsModule } from './mentorship-requests/mentorship-reque
 import { LanguagesModule } from './languages/languages.module';
 import { CountriesModule } from './countries/countries.module';
 import { MajorsModule } from './majors/majors.module';
-import { MentoringSessionsModule } from './mentoring-sessions/mentoring-sessions.module';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
 
@@ -37,7 +36,6 @@ import { validationSchema } from './config/validation.schema';
     LanguagesModule,
     CountriesModule,
     MajorsModule,
-    MentoringSessionsModule,
   ],
 })
 export class AppModule {}

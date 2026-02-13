@@ -106,39 +106,7 @@
 
 ---
 
-### 4. Mentoring Sessions Collection
-**Endpoint Base**: `/mentoring-sessions`
-
-**Schema**:
-```typescript
-{
-  studentId: ObjectId (ref: User)
-  mentorId: ObjectId (ref: Mentor)
-  scheduledAt: Date
-  duration: number (minutes, default: 30)
-  status: "scheduled" | "completed" | "cancelled"
-  topic?: string
-  notes?: string
-  location?: string
-  meetingLink?: string
-  completedAt?: Date
-  timestamps: { createdAt, updatedAt }
-}
-```
-
-**Endpoints**:
-- `POST /mentoring-sessions` - Schedule session
-- `GET /mentoring-sessions` - Get all sessions
-- `GET /mentoring-sessions/upcoming?userId=X&isMentor=true` - Upcoming sessions
-- `GET /mentoring-sessions/student/:studentId` - By student
-- `GET /mentoring-sessions/mentor/:mentorId` - By mentor
-- `GET /mentoring-sessions/:id` - Get by ID
-- `PATCH /mentoring-sessions/:id` - Update session
-- `DELETE /mentoring-sessions/:id` - Delete session
-
----
-
-### 5. Languages Collection (Reference Data)
+### 4. Languages Collection (Reference Data)
 **Endpoint Base**: `/languages`
 
 **Schema**:
@@ -203,7 +171,7 @@
 - `POST /majors/seed` - Seed initial data
 - `DELETE /majors/:id` - Delete major
 
-**Seeded Majors**: 28+ majors across Engineering, Business, Sciences, Humanities, Arts, Law, Health Sciences
+**Seeded Majors**: 4 majors (Software Engineering, Cyber Security, Data Science And AI, Digital Industrial Engineering)
 
 ---
 
@@ -243,7 +211,7 @@ Response: 204 No Content
 GET endpoints support query parameters:
 ```bash
 GET /mentors?languages=English,Spanish&isAvailable=true
-GET /mentoring-sessions/upcoming?userId=123&isMentor=false
+GET /mentorship-requests/student/123
 ```
 
 ---

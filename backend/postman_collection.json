@@ -114,51 +114,6 @@
       ]
     },
     {
-      "name": "Mentoring Sessions",
-      "item": [
-        {
-          "name": "Schedule Session",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"studentId\": \"STUDENT_ID\",\n  \"mentorId\": \"MENTOR_ID\",\n  \"scheduledAt\": \"2026-02-20T14:00:00Z\",\n  \"duration\": 60,\n  \"topic\": \"Career Planning\",\n  \"location\": \"Online - Zoom\",\n  \"meetingLink\": \"https://zoom.us/j/123456\"\n}"
-            },
-            "url": {"raw": "http://localhost:3001/mentoring-sessions", "host": ["localhost"], "port": "3001", "path": ["mentoring-sessions"]}
-          }
-        },
-        {
-          "name": "Get Upcoming Sessions",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3001/mentoring-sessions/upcoming?userId=USER_ID&isMentor=false",
-              "host": ["localhost"],
-              "port": "3001",
-              "path": ["mentoring-sessions", "upcoming"],
-              "query": [
-                {"key": "userId", "value": "USER_ID"},
-                {"key": "isMentor", "value": "false"}
-              ]
-            }
-          }
-        },
-        {
-          "name": "Complete Session",
-          "request": {
-            "method": "PATCH",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Great session! Discussed career paths in tech.\"\n}"
-            },
-            "url": {"raw": "http://localhost:3001/mentoring-sessions/SESSION_ID", "host": ["localhost"], "port": "3001", "path": ["mentoring-sessions", "SESSION_ID"]}
-          }
-        }
-      ]
-    },
-    {
       "name": "Reference Data",
       "item": [
         {
