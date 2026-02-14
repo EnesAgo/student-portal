@@ -41,6 +41,31 @@ Welcome to the Student Portal Backend documentation!
   - Frontend data synchronization
 
 ### Testing
+- **[API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md)** - Automated API testing
+  - Complete test suite for all 31 endpoints
+  - Usage instructions and troubleshooting
+  - Test data examples
+
+- **[TEST_SUITE_SUMMARY.md](./TEST_SUITE_SUMMARY.md)** - Test suite overview
+  - Test coverage breakdown
+  - Features and benefits
+  - Integration with CI/CD
+
+- **[DATABASE_SEEDER_GUIDE.md](./DATABASE_SEEDER_GUIDE.md)** - Database seeder
+  - Populate DB with realistic dummy data
+  - Persistent data for development
+  - Test accounts and sample data
+
+- **[../scripts/test-api.js](../scripts/test-api.js)** - Executable test script
+  - Run with: `npm run test:api`
+  - 35 automated tests
+  - Cleans up test data automatically
+
+- **[../scripts/seed-database.js](../scripts/seed-database.js)** - Database seeder script
+  - Run with: `npm run seed:db`
+  - Creates 5 users, 2 mentors, 3 requests
+  - Data persists for development use
+
 - **[../postman_collection.json](../postman_collection.json)** - Postman collection
   - Import into Postman for API testing
   - Pre-configured requests for all endpoints

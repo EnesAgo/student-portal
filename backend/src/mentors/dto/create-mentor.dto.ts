@@ -6,8 +6,44 @@ import {
   IsNumber,
   Min,
   Max,
-  IsBoolean,
+  IsObject,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class AcademicBackgroundDto {
+  @IsString()
+  major: string;
+
+  @IsNumber()
+  currentSemester: number;
+
+  @IsString()
+  focusAreas: string;
+
+  @IsString()
+  experience: string;
+}
+
+class PersonalInfoDto {
+  @IsString()
+  languages: string;
+
+  @IsString()
+  nationality: string;
+
+  @IsString()
+  hobbies: string;
+}
+
+class MentorshipFocusDto {
+  @IsString()
+  whoCanHelp: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  topics: string[];
+}
 
 export class CreateMentorDto {
   @IsNotEmpty()
@@ -26,6 +62,10 @@ export class CreateMentorDto {
   @IsString()
   country: string;
 
+  @IsOptional()
+  @IsString()
+  flag?: string;
+
   @IsArray()
   @IsString({ each: true })
   majors: string[];
@@ -35,17 +75,21 @@ export class CreateMentorDto {
   @IsString({ each: true })
   interests?: string[];
 
+  @IsOptional()
+  @IsNumber()
+  semester?: number;
+
   @IsNotEmpty()
   @IsString()
   yearOfStudy: string;
 
   @IsOptional()
-  @IsArray()
-  availability?: Array<{
-    day: string;
-    startTime: string;
-    endTime: string;
-  }>;
+  @IsString()
+  image?: string;
+
+  @IsOptional()
+  @IsString()
+  email?: string;
 
   @IsOptional()
   @IsNumber()
@@ -60,5 +104,28 @@ export class CreateMentorDto {
   @IsOptional()
   @IsString()
   instagram?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  about?: string[];
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AcademicBackgroundDto)
+  academicBackground?: AcademicBackgroundDto;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PersonalInfoDto)
+  personalInfo?: PersonalInfoDto;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MentorshipFocusDto)
+  mentorshipFocus?: MentorshipFocusDto;
 }
 

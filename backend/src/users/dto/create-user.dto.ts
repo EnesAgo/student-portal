@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength, Matches } from 'class-validator';
 import { UserRole } from '../schemas/user.schema';
 
 export class CreateUserDto {
@@ -12,6 +12,9 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
+  @Matches(/@(stu\.)?uni-munich\.de$/, {
+    message: 'Email must be from uni-munich.de domain (@uni-munich.de or @stu.uni-munich.de)',
+  })
   email: string;
 
   @IsNotEmpty()

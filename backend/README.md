@@ -84,6 +84,57 @@ npm run start:debug
 
 The API will be available at `http://localhost:3001`
 
+## Testing the API
+
+### Automated Test Suite
+
+Test all 31 API endpoints automatically:
+
+```bash
+# Make sure server is running first
+npm run start:dev
+
+# In another terminal, run tests
+npm run test:api
+```
+
+The test script will:
+- Create test users, mentors, and requests
+- Test all CRUD operations
+- Test filtering and search
+- Clean up test data automatically
+
+See [API_TESTING_GUIDE.md](./docs/API_TESTING_GUIDE.md) for details.
+
+### Database Seeder (Persistent Dummy Data)
+
+Populate your database with realistic sample data for development:
+
+```bash
+# Make sure server is running first
+npm run start:dev
+
+# In another terminal, seed the database
+npm run seed:db
+```
+
+The seeder will:
+- Create 5 users (4 students, 1 admin)
+- Create 2 mentor profiles with complete data
+- Create 3 mentorship requests (2 pending, 1 accepted)
+- Seed all reference data (languages, countries, majors)
+- Test various GET endpoints
+- **Keep all data** (not deleted - persistent for development)
+
+Created accounts you can use:
+- Student: `emma.johnson@stu.uni-munich.de` / `password123`
+- Mentor: `sarah.chen@stu.uni-munich.de` / `password123`
+- Admin: `admin@uni-munich.de` / `adminpass123`
+
+### Manual Testing with Postman
+
+Import `postman_collection.json` into Postman to test endpoints manually.
+
 ## Seed Initial Data
 
 After starting the server, seed the reference data:

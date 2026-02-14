@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMentorshipRequestDto {
   @IsNotEmpty()
@@ -12,9 +12,5 @@ export class CreateMentorshipRequestDto {
   @IsNotEmpty()
   @IsString()
   message: string;
-
-  @IsOptional()
-  @IsDateString()
-  proposedMeetingTime?: string;
 }
 

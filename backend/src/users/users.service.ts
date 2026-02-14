@@ -1,6 +1,6 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,10 +22,17 @@ export class UsersService {
     // Hash password
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const createdUser = new this.userModel({
+    // Convert studentId to ObjectId if provided
+    const userData: any = {
       ...createUserDto,
       password: hashedPassword,
-    });
+    };
+
+    if (createUserDto.studentId) {
+      userData.studentId = new Types.ObjectId(createUserDto.studentId);
+    }
+
+    const createdUser = new this.userModel(userData);
 
     return createdUser.save();
   }
@@ -48,12 +55,19 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     // If password is being updated, hash it
+    const updateData: any = { ...updateUserDto };
+
     if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      updateData.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    // Convert studentId to ObjectId if provided
+    if (updateUserDto.studentId) {
+      updateData.studentId = new Types.ObjectId(updateUserDto.studentId);
     }
 
     const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .findByIdAndUpdate(id, updateData, { new: true })
       .select('-password')
       .exec();
 

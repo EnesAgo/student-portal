@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -28,8 +28,8 @@ export class User {
   @Prop({ default: false })
   isMentor: boolean;
 
-  @Prop()
-  studentId?: string;
+  @Prop({ type: Types.ObjectId })
+  studentId?: Types.ObjectId;
 
   @Prop()
   phoneNumber?: string;

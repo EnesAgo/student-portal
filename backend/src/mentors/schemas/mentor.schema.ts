@@ -17,14 +17,26 @@ export class Mentor {
   @Prop()
   country: string;
 
+  @Prop()
+  flag: string;
+
   @Prop({ type: [String], default: [] })
   majors: string[];
 
   @Prop({ type: [String], default: [] })
-  interests: string[]; // e.g., ["Academic Support", "Career Guidance", "Social Integration"]
+  interests: string[];
+
+  @Prop()
+  semester: number;
 
   @Prop()
   yearOfStudy: string;
+
+  @Prop()
+  image: string;
+
+  @Prop()
+  email: string;
 
   @Prop({ default: 0 })
   rating: number;
@@ -34,13 +46,6 @@ export class Mentor {
 
   @Prop({ default: true })
   isAvailable: boolean;
-
-  @Prop({ type: [{ day: String, startTime: String, endTime: String }], default: [] })
-  availability: Array<{
-    day: string;
-    startTime: string;
-    endTime: string;
-  }>;
 
   @Prop({ default: 0 })
   totalMentees: number;
@@ -53,6 +58,31 @@ export class Mentor {
 
   @Prop()
   instagram?: string;
+
+  // Optional detailed fields from frontend
+  @Prop({ type: [String] })
+  about?: string[];
+
+  @Prop({ type: Object })
+  academicBackground?: {
+    major: string;
+    currentSemester: number;
+    focusAreas: string;
+    experience: string;
+  };
+
+  @Prop({ type: Object })
+  personalInfo?: {
+    languages: string;
+    nationality: string;
+    hobbies: string;
+  };
+
+  @Prop({ type: Object })
+  mentorshipFocus?: {
+    whoCanHelp: string;
+    topics: string[];
+  };
 }
 
 export const MentorSchema = SchemaFactory.createForClass(Mentor);

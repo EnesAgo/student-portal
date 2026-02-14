@@ -24,8 +24,6 @@ export class MentorshipRequest {
   @Prop({ required: true, enum: RequestStatus, default: RequestStatus.PENDING })
   status: RequestStatus;
 
-  @Prop()
-  proposedMeetingTime?: Date;
 
   @Prop()
   responseMessage?: string;

@@ -13,7 +13,7 @@
 {
   firstName: string
   lastName: string
-  email: string (unique)
+  email: string (unique, must be @uni-munich.de or @stu.uni-munich.de)
   password: string (hashed)
   role: "student" | "admin"
   isMentor: boolean
@@ -296,12 +296,12 @@ Error responses:
 ## Validation Rules
 
 - Email must be valid and unique
+- **Email must use @uni-munich.de or @stu.uni-munich.de domain**
 - Password minimum 6 characters
 - All required fields must be provided
 - Enum values must match defined options
 - ObjectId references must be valid MongoDB IDs
 - Rating must be between 0-5
-- Duration must be at least 15 minutes
 
 ---
 
