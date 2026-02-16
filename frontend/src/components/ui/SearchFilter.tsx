@@ -1,8 +1,9 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useState, useEffect } from "react";
 import { FilterOptions } from "@/types/mentor";
-import { MAJORS, LANGUAGES } from "@/data/constants";
+import { fetchMajors, fetchLanguages, Major, Language } from "@/services/api.service";
 
 interface SearchFilterProps {
   filters: FilterOptions;
@@ -12,6 +13,26 @@ interface SearchFilterProps {
 }
 
 export default function SearchFilter({ filters, onFilterChange, onSearchChange, searchQuery }: SearchFilterProps) {
+  const [majors, setMajors] = useState<Major[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
+
+  useEffect(() => {
+    const loadOptions = async () => {
+      try {
+        const [fetchedMajors, fetchedLanguages] = await Promise.all([
+          fetchMajors(),
+          fetchLanguages(),
+        ]);
+        setMajors(fetchedMajors.filter(m => m.isActive));
+        setLanguages(fetchedLanguages.filter(l => l.isActive));
+      } catch (error) {
+        console.error('Error fetching filter options:', error);
+      }
+    };
+
+    loadOptions();
+  }, []);
+
   const handleClearFilters = () => {
     onFilterChange({ major: "", semester: "", language: "" });
     onSearchChange("");
@@ -38,9 +59,9 @@ export default function SearchFilter({ filters, onFilterChange, onSearchChange, 
               onChange={(e) => onFilterChange({ ...filters, major: e.target.value })}
             >
               <option value="">All Majors</option>
-              {MAJORS.map((major) => (
-                <option key={major} value={major}>
-                  {major}
+              {majors.map((major) => (
+                <option key={major._id} value={major.name}>
+                  {major.name}
                 </option>
               ))}
             </select>
@@ -60,9 +81,9 @@ export default function SearchFilter({ filters, onFilterChange, onSearchChange, 
               onChange={(e) => onFilterChange({ ...filters, language: e.target.value })}
             >
               <option value="">All Languages</option>
-              {LANGUAGES.map((language) => (
-                <option key={language} value={language}>
-                  {language}
+              {languages.map((language) => (
+                <option key={language._id} value={language.name}>
+                  {language.name}
                 </option>
               ))}
             </select>

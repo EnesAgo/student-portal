@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/layout";
 import { SearchFilter, MentorCard, MentorProfileModal, RequestModal } from "@/components/ui";
 import { HowItWorks, AboutProgram } from "@/components/pages";
-import { mentors } from "@/data/mentors.json";
 import { Mentor, FilterOptions } from "@/types/mentor";
+import { fetchAndTransformMentors } from "@/services/api.service";
 
 export default function MentoringPage() {
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>({
     major: "",
     semester: "",
@@ -17,6 +20,25 @@ export default function MentoringPage() {
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+
+  // Fetch mentors from backend on component mount
+  useEffect(() => {
+    const loadMentors = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const fetchedMentors = await fetchAndTransformMentors();
+        setMentors(fetchedMentors);
+      } catch (err) {
+        console.error('Error fetching mentors:', err);
+        setError('Failed to load mentors. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMentors();
+  }, []);
 
   // Filter mentors based on search and filters
   const filteredMentors = useMemo(() => {
@@ -59,7 +81,7 @@ export default function MentoringPage() {
 
       return true;
     });
-  }, [filters, searchQuery]);
+  }, [mentors, filters, searchQuery]);
 
   const handleMentorClick = (mentor: Mentor) => {
     setSelectedMentor(mentor);
@@ -106,24 +128,51 @@ export default function MentoringPage() {
               available
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMentors.map((mentor) => (
-              <MentorCard
-                key={mentor.id}
-                mentor={mentor}
-                onClick={() => handleMentorClick(mentor)}
-              />
-            ))}
-          </div>
-          {filteredMentors.length === 0 && (
+
+          {/* Loading State */}
+          {loading && (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
-                No mentors found matching your criteria.
-              </p>
-              <p className="text-gray-400 text-sm mt-2">
-                Try adjusting your filters or search query.
-              </p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <p className="text-gray-500 mt-4">Loading mentors...</p>
             </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="text-center py-12">
+              <p className="text-red-500 text-lg">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
+          {/* Mentors Grid */}
+          {!loading && !error && (
+            <>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredMentors.map((mentor) => (
+                  <MentorCard
+                    key={mentor.id}
+                    mentor={mentor}
+                    onClick={() => handleMentorClick(mentor)}
+                  />
+                ))}
+              </div>
+              {filteredMentors.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">
+                    No mentors found matching your criteria.
+                  </p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Try adjusting your filters or search query.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </section>
 
