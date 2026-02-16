@@ -15,7 +15,11 @@ function logSuccess(name, data = null) {
 
 function logError(name, error) {
   console.log(`\n❌ ${name}`);
-  console.log(`   Error:`, error.message || error);
+  if (error.response?.data) {
+    console.log(`   Error:`, JSON.stringify(error.response.data, null, 2));
+  } else {
+    console.log(`   Error:`, error.message || error);
+  }
 }
 
 // Helper function to make requests
@@ -71,10 +75,15 @@ async function seedDatabase() {
     email: 'sarah.chen@stu.uni-munich.de',
     password: 'password123',
     role: 'student',
-    isMentor: true,
     phoneNumber: '+49123456789',
-  }, 'Create Student 2: Sarah Chen (Mentor)');
-  if (user2Result.success) createdUserIds.sarah = user2Result.data._id;
+  }, 'Create Student 2: Sarah Chen');
+  if (user2Result.success) {
+    createdUserIds.sarah = user2Result.data._id;
+    // Update to set isMentor flag
+    await makeRequest('PATCH', `/users/${createdUserIds.sarah}`, {
+      isMentor: true
+    }, 'Set Sarah as Mentor');
+  }
 
   // User 3: Another Student who will become a Mentor
   const user3Result = await makeRequest('POST', '/users', {
@@ -83,10 +92,15 @@ async function seedDatabase() {
     email: 'mehmet.yilmaz@stu.uni-munich.de',
     password: 'password123',
     role: 'student',
-    isMentor: true,
     phoneNumber: '+905551234567',
-  }, 'Create Student 3: Mehmet Yılmaz (Mentor)');
-  if (user3Result.success) createdUserIds.mehmet = user3Result.data._id;
+  }, 'Create Student 3: Mehmet Yılmaz');
+  if (user3Result.success) {
+    createdUserIds.mehmet = user3Result.data._id;
+    // Update to set isMentor flag
+    await makeRequest('PATCH', `/users/${createdUserIds.mehmet}`, {
+      isMentor: true
+    }, 'Set Mehmet as Mentor');
+  }
 
   // User 4: Another regular student
   const user4Result = await makeRequest('POST', '/users', {
@@ -109,8 +123,18 @@ async function seedDatabase() {
   }, 'Create Admin User');
   if (adminResult.success) createdUserIds.admin = adminResult.data._id;
 
+  // Wait a moment to ensure all users are created
+  console.log('\n⏳ Waiting for user creation to complete...');
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   // ========== CREATE MENTOR PROFILES ==========
   console.log('\n━━━ Step 3: Creating Mentor Profiles ━━━');
+
+  // Check if we have the user IDs we need
+  console.log('📋 Checking user IDs:', {
+    sarah: createdUserIds.sarah || 'NOT FOUND',
+    mehmet: createdUserIds.mehmet || 'NOT FOUND'
+  });
 
   // Mentor 1: Sarah Chen - Software Engineering
   if (createdUserIds.sarah) {
@@ -157,6 +181,11 @@ async function seedDatabase() {
       }
     }, 'Create Mentor Profile: Sarah Chen');
     if (mentor1Result.success) createdMentorIds.sarah = mentor1Result.data._id;
+  } else {
+    console.log('\n⚠️  Skipping Sarah mentor profile - User ID not found');
+    console.log('   Possible reasons:');
+    console.log('   - User creation failed (email already exists?)');
+    console.log('   - Check if sarah.chen@stu.uni-munich.de already exists in DB');
   }
 
   // Mentor 2: Mehmet Yılmaz - Cyber Security
@@ -202,6 +231,11 @@ async function seedDatabase() {
       }
     }, 'Create Mentor Profile: Mehmet Yılmaz');
     if (mentor2Result.success) createdMentorIds.mehmet = mentor2Result.data._id;
+  } else {
+    console.log('\n⚠️  Skipping Mehmet mentor profile - User ID not found');
+    console.log('   Possible reasons:');
+    console.log('   - User creation failed (email already exists?)');
+    console.log('   - Check if mehmet.yilmaz@stu.uni-munich.de already exists in DB');
   }
 
   // ========== CREATE MENTORSHIP REQUESTS ==========

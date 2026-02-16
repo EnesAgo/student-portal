@@ -126,6 +126,16 @@ The seeder will:
 - Test various GET endpoints
 - **Keep all data** (not deleted - persistent for development)
 
+**Note**: If you run the seeder again and users already exist, it will skip creating them. To start fresh:
+
+```bash
+# Clear all seeded data first
+npm run clear:db
+
+# Then seed again
+npm run seed:db
+```
+
 Created accounts you can use:
 - Student: `emma.johnson@stu.uni-munich.de` / `password123`
 - Mentor: `sarah.chen@stu.uni-munich.de` / `password123`
