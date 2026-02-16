@@ -110,6 +110,8 @@ See [API_TESTING_GUIDE.md](./docs/API_TESTING_GUIDE.md) for details.
 
 Populate your database with realistic sample data for development:
 
+#### Running Locally (without Docker)
+
 ```bash
 # Make sure server is running first
 npm run start:dev
@@ -118,7 +120,25 @@ npm run start:dev
 npm run seed:db
 ```
 
-The seeder will:
+#### Running with Docker
+
+```bash
+# Make sure containers are running
+docker-compose up -d
+
+# Seed the database from your host terminal
+docker-compose exec backend npm run seed:db
+```
+
+Or using Docker Desktop:
+1. Open Docker Desktop
+2. Go to Containers → `student-portal-backend`
+3. Click "Exec" tab
+4. Run: `npm run seed:db`
+
+---
+
+**What the seeder does:**
 - Create 5 users (4 students, 1 admin)
 - Create 2 mentor profiles with complete data
 - Create 3 mentorship requests (2 pending, 1 accepted)
