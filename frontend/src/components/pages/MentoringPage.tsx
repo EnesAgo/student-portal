@@ -110,12 +110,12 @@ export default function MentoringPage() {
         </div>
 
         {/* Search and Filter Section */}
-        <SearchFilter
-          filters={filters}
-          onFilterChange={setFilters}
-          onSearchChange={setSearchQuery}
-          searchQuery={searchQuery}
-        />
+        {/*<SearchFilter*/}
+        {/*  filters={filters}*/}
+        {/*  onFilterChange={setFilters}*/}
+        {/*  onSearchChange={setSearchQuery}*/}
+        {/*  searchQuery={searchQuery}*/}
+        {/*/>*/}
 
         {/* Mentor Cards Grid */}
         <section className="mb-12">
