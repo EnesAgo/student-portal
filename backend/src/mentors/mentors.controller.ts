@@ -13,10 +13,17 @@ import {
 import { MentorsService } from './mentors.service';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateMentorDto } from './dto/update-mentor.dto';
+import { SeedMentorsDto } from './dto/seed-mentors.dto';
 
 @Controller('mentors')
 export class MentorsController {
   constructor(private readonly mentorsService: MentorsService) {}
+
+  @Post('seed')
+  @HttpCode(HttpStatus.CREATED)
+  seedMainMentors(@Body() seedMentorsDto: SeedMentorsDto) {
+    return this.mentorsService.seedMainMentors(seedMentorsDto.adminPassword);
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

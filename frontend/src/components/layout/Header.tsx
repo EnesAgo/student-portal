@@ -13,11 +13,11 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              src="https://images.unsplash.com/photo-1562774053-701939374585?w=100&h=100&fit=crop"
+              src="/MUDT_logo.svg"
               alt="University Logo"
               width={40}
               height={40}
-              className="w-10 h-10 rounded-lg"
+              className="w-40 h-10 rounded-lg"
             />
             <div>
               <h1 className="text-lg font-semibold text-gray-900">Student Portal</h1>
