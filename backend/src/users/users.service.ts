@@ -1,36 +1,31 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Mentor, MentorDocument } from '../mentors/schemas/mentor.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Mentor.name) private mentorModel: Model<MentorDocument>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    // Check if user already exists
     const existingUser = await this.userModel.findOne({ email: createUserDto.email });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    // Convert studentId to ObjectId if provided
     const userData: any = {
       ...createUserDto,
       password: hashedPassword,
     };
-
-    if (createUserDto.studentId) {
-      userData.studentId = new Types.ObjectId(createUserDto.studentId);
-    }
 
     const createdUser = new this.userModel(userData);
 
@@ -54,16 +49,10 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    // If password is being updated, hash it
     const updateData: any = { ...updateUserDto };
 
     if (updateUserDto.password) {
       updateData.password = await bcrypt.hash(updateUserDto.password, 10);
-    }
-
-    // Convert studentId to ObjectId if provided
-    if (updateUserDto.studentId) {
-      updateData.studentId = new Types.ObjectId(updateUserDto.studentId);
     }
 
     const updatedUser = await this.userModel
@@ -85,15 +74,11 @@ export class UsersService {
     }
   }
 
-  async findMentors(): Promise<User[]> {
-    return this.userModel
-      .find({ isMentor: true })
-      .select('-password')
-      .exec();
+  async findMentors(): Promise<Mentor[]> {
+    return this.mentorModel.find().populate('userId', '-password').exec();
   }
 
   async updateLastLogin(userId: string): Promise<void> {
     await this.userModel.findByIdAndUpdate(userId, { lastLogin: new Date() });
   }
 }
-

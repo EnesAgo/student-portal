@@ -1,10 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
 export enum UserRole {
   STUDENT = 'student',
+  DRAFT_STUDENT = 'draftStudent',
+  PENDING_STUDENT = 'pendingStudent',
   ADMIN = 'admin',
 }
 
@@ -25,11 +27,8 @@ export class User {
   @Prop({ required: true, enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
-  @Prop({ default: false })
-  isMentor: boolean;
-
-  @Prop({ type: Types.ObjectId })
-  studentId?: Types.ObjectId;
+  @Prop()
+  studentId?: string;
 
   @Prop()
   phoneNumber?: string;
@@ -49,5 +48,3 @@ export const UserSchema = SchemaFactory.createForClass(User);
 // Add indexes
 UserSchema.index({ email: 1 });
 UserSchema.index({ role: 1 });
-UserSchema.index({ isMentor: 1 });
-

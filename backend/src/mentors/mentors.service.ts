@@ -15,7 +15,13 @@ export class MentorsService {
   ) {}
 
   async create(createMentorDto: CreateMentorDto): Promise<Mentor> {
-    // Check if mentor profile already exists for this user
+    const userIdStr = String(createMentorDto.userId);
+    const user = await this.usersService.findOne(userIdStr);
+
+    if (user.role === UserRole.ADMIN) {
+      throw new ConflictException('Admin users cannot be created as mentors');
+    }
+
     const existingMentor = await this.mentorModel.findOne({
       userId: new Types.ObjectId(createMentorDto.userId),
     });
@@ -135,7 +141,6 @@ export class MentorsService {
   }
 
   async seedMainMentors(adminPassword: string): Promise<{ message: string; mentors: any[] }> {
-    // Validate admin password
     if (adminPassword !== 'admin') {
       throw new UnauthorizedException('Invalid admin password');
     }
@@ -147,7 +152,7 @@ export class MentorsService {
           lastName: 'Zeltmanis',
           email: 'edgars.zeltmanis@stu.uni-munich.de',
           password: 'password',
-          role: UserRole.STUDENT,
+          role: UserRole.PENDING_STUDENT,
         },
         mentor: {
           bio: 'Hi! I am Edgars, a Latvian student with diverse interests. I enjoy motorcycles, skiing, surfing, and golf. I speak multiple languages and am here to help international students adapt to university life.',
@@ -178,7 +183,7 @@ export class MentorsService {
           lastName: 'Arifi',
           email: 'malsor.arifi@stu.uni-munich.de',
           password: 'password',
-          role: UserRole.STUDENT,
+          role: UserRole.PENDING_STUDENT,
         },
         mentor: {
           bio: 'Greetings! I am Malsor, a Software Engineering student from Kosovo. I love football and coding. I am here to help fellow students with their academic journey and integration.',
@@ -209,7 +214,7 @@ export class MentorsService {
           lastName: 'Mbobbo',
           email: 'timothy.mbobbo@stu.uni-munich.de',
           password: 'password',
-          role: UserRole.STUDENT,
+          role: UserRole.PENDING_STUDENT,
         },
         mentor: {
           bio: 'Hello! I am Timothy from Uganda, currently studying Data Science. I enjoy rugby, swimming, and relaxing. I am here to support international students in their academic and personal journey.',
@@ -240,7 +245,7 @@ export class MentorsService {
           lastName: 'Ago',
           email: 'enes.ago@stu.uni-munich.de',
           password: 'password',
-          role: UserRole.STUDENT,
+          role: UserRole.PENDING_STUDENT,
         },
         mentor: {
           bio: 'Hey! I am Enes, a Cyber Security student from North Macedonia. I enjoy playing piano, coding, and skateboarding. I am passionate about helping international students navigate their university experience.',
@@ -271,24 +276,17 @@ export class MentorsService {
 
     for (const data of mentorsData) {
       try {
-        // Check if user already exists
         const existingUser = await this.usersService.findByEmail(data.user.email);
 
         let userId: string;
 
         if (existingUser) {
           userId = existingUser._id.toString();
-          // Update user to be a mentor
-          await this.usersService.update(userId, { isMentor: true });
         } else {
-          // Create user
           const newUser = await this.usersService.create(data.user);
           userId = (newUser as any)._id.toString();
-          // Update user to be a mentor
-          await this.usersService.update(userId, { isMentor: true });
         }
 
-        // Check if mentor profile already exists
         const existingMentor = await this.mentorModel.findOne({
           userId: new Types.ObjectId(userId),
         });
@@ -302,7 +300,6 @@ export class MentorsService {
           continue;
         }
 
-        // Create mentor profile
         const mentor = new this.mentorModel({
           ...data.mentor,
           userId: new Types.ObjectId(userId),
@@ -330,4 +327,3 @@ export class MentorsService {
     };
   }
 }
-

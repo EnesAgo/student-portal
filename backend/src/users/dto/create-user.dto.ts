@@ -28,6 +28,9 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
+  @Matches(/^[A-Za-z0-9._/-]+$/, {
+    message: 'studentId must contain only letters, numbers, dots, underscores, slashes, and hyphens',
+  })
   studentId?: string;
 
   @IsOptional()
@@ -38,4 +41,3 @@ export class CreateUserDto {
   @IsString()
   profilePicture?: string;
 }
-
