@@ -7,6 +7,7 @@ import { MentorshipRequestsModule } from './mentorship-requests/mentorship-reque
 import { LanguagesModule } from './languages/languages.module';
 import { CountriesModule } from './countries/countries.module';
 import { MajorsModule } from './majors/majors.module';
+import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
 
@@ -30,6 +31,7 @@ import { validationSchema } from './config/validation.schema';
     }),
 
     // Feature Modules
+    AuthModule,
     UsersModule,
     MentorsModule,
     MentorshipRequestsModule,

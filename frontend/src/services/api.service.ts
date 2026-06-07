@@ -152,6 +152,25 @@ export const transformMentorToFrontend = async (
   };
 };
 
+// Auth API methods
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<{ access_token: string; user: User }> => {
+  const response = await apiClient.post('/auth/login', { email, password });
+  return response.data;
+};
+
+export const registerUser = async (data: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}): Promise<{ access_token: string; user: User }> => {
+  const response = await apiClient.post('/auth/register', data);
+  return response.data;
+};
+
 // Fetch all mentors and transform them to frontend format
 export const fetchAndTransformMentors = async (): Promise<Mentor[]> => {
   const backendMentors = await fetchMentors();

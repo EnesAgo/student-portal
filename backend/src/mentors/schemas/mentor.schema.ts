@@ -87,8 +87,7 @@ export class Mentor {
 
 export const MentorSchema = SchemaFactory.createForClass(Mentor);
 
-// Add indexes
-MentorSchema.index({ userId: 1 });
+// Add indexes (userId index already created by unique: true)
 MentorSchema.index({ isAvailable: 1 });
 MentorSchema.index({ languages: 1 });
 MentorSchema.index({ country: 1 });
